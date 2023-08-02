@@ -85,12 +85,6 @@ function App () {
     <div className="main-wrapper">
       <div className="main">
         <Header />
-        <CreateTodo
-          todoData={todoData}
-          onChangeTodoForm={handleChangeTodoForm}
-          handleTodoSubmit={handleTodoSubmit}
-        />
-        <TodoList todos={todos} />
         <CreateBook 
           bookShelf={bookShelf}
           onChangeForm={handleOnChangeForm}
@@ -101,6 +95,12 @@ function App () {
           getAllBook={getAllBook} 
         />
         <BookTable books={books} />
+        <CreateTodo
+          todoData={todoData}
+          onChangeTodoForm={handleChangeTodoForm}
+          handleTodoSubmit={handleTodoSubmit}
+        />
+        <TodoList todos={todos} />
         <Footer />
       </div>
     </div>
