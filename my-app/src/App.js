@@ -1,17 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import Header from './components/Header';
 import BookTable from './components/BookTable';
 import DisplayBoard from './components/DisplayBoard';
 import CreateBook from './components/CreateBook';
-import { getAllBooks, createBook } from './services/BookService';
+import { getAllBooks, createBook, getAllTodoList, createTodoList } from './services/BookService';
 import Footer from './components/Footer';
+import CreateTodo from './components/CreateTodo';
+import TodoList from './components/TodoList';
+
+
 
 function App () {
 
   const [bookShelf, setBookShelf] = useState({});
   const [books, setBooks] = useState([]);
   const [numberOfBooks, setNumberBooks] = useState(0);
+  const [todos, setTodos] = useState([]);
+  const [numberOfTodos, setNumberTodos] = useState(0);
+
+  useEffect(() => {
+    getAllBook();
+    getAllTodos(); 
+  }, []);
+
 
   const handleSubmit = () => {
       createBook(bookShelf)
@@ -40,11 +52,45 @@ function App () {
       setBookShelf(inputData);
   }
 
+  const handleTodoSubmit = () => {
+    createTodoList(todoData).then(() => {
+      setNumberTodos(numberOfTodos + 1);
+    });
+  };
+
+  const [todoData, setTodoData] = useState({
+    todo: '',
+    category: '',
+    isComplete: false,
+  });
+
+  const handleChangeTodoForm = (e) => {
+    const { name, value, type } = e.target;
+
+  
+    const newValue = type === 'checkbox' ? e.target.checked : value;
+
+    setTodoData((prevData) => ({ ...prevData, [name]: newValue }));
+  };
+
+  const getAllTodos = () => {
+    getAllTodoList().then((data) => {
+      setTodos(data);
+      setNumberTodos(data.length);
+    });
+  };
+
   
   return (
     <div className="main-wrapper">
       <div className="main">
         <Header />
+        <CreateTodo
+          todoData={todoData}
+          onChangeTodoForm={handleChangeTodoForm}
+          handleTodoSubmit={handleTodoSubmit}
+        />
+        <TodoList todos={todos} />
         <CreateBook 
           bookShelf={bookShelf}
           onChangeForm={handleOnChangeForm}
